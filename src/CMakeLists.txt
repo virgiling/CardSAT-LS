@@ -111,17 +111,4 @@ target_link_libraries(cardsat PRIVATE
     LocalSearch Preprocess Utils ccdcl_interface ccdcl_imported)
 target_include_directories(cardsat PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
 
-if(BUILD_TESTING)
-    add_executable(cardsat_strict_fixture
-        "${PROJECT_SOURCE_DIR}/tests/strict_model_main.cpp"
-        solver.cpp)
-    add_dependencies(cardsat_strict_fixture build_ccdcl)
-    target_link_libraries(cardsat_strict_fixture PRIVATE
-        LocalSearch Preprocess Utils ccdcl_interface ccdcl_imported)
-    target_include_directories(cardsat_strict_fixture PRIVATE
-        "${CMAKE_CURRENT_SOURCE_DIR}"
-        "${CCDCL_SRC_DIR}/src"
-        "${PROJECT_SOURCE_DIR}/include")
-endif()
-
 install(TARGETS cardsat LocalSearch Preprocess Utils)

@@ -234,8 +234,7 @@ bool Preprocessor::get_complete_model() {
   return true;
 }
 
-int Preprocessor::do_preprocess(const char *filename,
-                                bool enable_local_search_passes) {
+int Preprocessor::do_preprocess(const char *filename) {
   read_file(filename);
   preprocess_init();
 
@@ -250,10 +249,11 @@ int Preprocessor::do_preprocess(const char *filename,
   if (!preprocess_resolution())
     return fail();
 
-  if (enable_local_search_passes) {
-    if (!preprocess_binary() || !preprocess_card())
-      return fail();
-  }
+  // if (!preprocess_card())
+  //   return fail();
+
+  if (!preprocess_binary())
+    return fail();
 
   printf("c after preprocessing, vars = %d, clauses = %d\n", vars, clauses);
 

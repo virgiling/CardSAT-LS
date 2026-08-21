@@ -14,8 +14,7 @@ int Solver::run() {
   int res = 0;
   if (OPT(preprocessing)) {
     m_preprocessor = std::make_unique<Preprocessor>();
-    res = m_preprocessor->do_preprocess(OPT(filename).c_str(),
-                                        OPT(mode) == 0);
+    res = m_preprocessor->do_preprocess(OPT(filename).c_str());
     if (res)
       return res;
     printf("c preprocess finished\n");

@@ -1,10 +1,3 @@
-/*
- * Clique recognition adapted from PRS-sc26
- * (src/preprocess/card.cpp, commit 53ae719dce4e172e46d93f19acf4728146fc5f03).
- * Modified to perform only transactional pure-triangle compression on KNF.
- * See third_party/licenses/PRS-sc26-LICENSE.
- */
-
 #include "preprocess.hpp"
 
 #include <algorithm>

@@ -43,8 +43,7 @@ public:
   bool preprocess_card();
   bool preprocess_up();
   bool get_complete_model();
-  int do_preprocess(const char *filename,
-                    bool enable_local_search_passes = false);
+  int do_preprocess(const char *filename);
 
 private:
   void clear_problem();

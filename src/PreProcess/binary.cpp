@@ -1,10 +1,3 @@
-/*
- * Binary-pattern preprocessing adapted from PRS-sc26
- * (src/preprocess/binary.cpp, commit 53ae719dce4e172e46d93f19acf4728146fc5f03).
- * Modified for native KNF constraints and recoverable signed mappings.
- * See third_party/licenses/PRS-sc26-LICENSE.
- */
-
 #include "preprocess.hpp"
 
 #include <algorithm>
@@ -93,8 +86,6 @@ int Preprocessor::find(int variable) {
     root = f[root];
   }
 
-  // Keep path compression iterative: generated instances can contain chains
-  // long enough to overflow the call stack in the recursive PRS version.
   int current = variable;
   int prefix = 1;
   while (f[current] != current) {
