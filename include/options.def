@@ -1,0 +1,46 @@
+OPTION(cutoff, double, 3600.0, 0.0, 1e18,
+       "cutoff time(seconds)")
+OPTION(seeds, int, 20, 0, 2e9,
+       "random seed")
+OPTION(preprocessing, int, 1, 0, 1,
+       "Preprocessing mode (0=none, 1=simplify)")
+OPTION(pre_dedup, int, 1, 0, 1,
+       "Remove duplicate rows, retaining the strongest bound")
+OPTION(mode, int, 0, 0, 1,
+       "Use ccdcl or local search (0=local search, 1=ccdcl)")
+OPTION(init_mode, int, 1, 0, 4,
+       "Initialization mode (0=random, 1=backbone, 2=best, 3=false, 4=true)")
+OPTION(enable_swap, int, 1, 0, 1,
+       "Enable swap variables")
+OPTION(ls_max_flips, int, 29256504, 0, 1e9,
+       "Maximum number of flips")
+OPTION(ls_max_non_improve_flip, int, 17193298, 0, 1e9,
+       "Restart patience without a strict best improvement")
+OPTION(ls_swap_non_improve_flip, int, 431188, 0, 1e9,
+       "Non-improving flips before swap becomes eligible")
+OPTION(ls_swapprob, double, 0.0044873770692, 0, 1,
+       "Swap probability")
+OPTION(ls_backbone_threshold, int, 272, 0, 1e9,
+       "Backbone threshold")
+OPTION(ls_rdprob, double, 0.015390844143, 0.0, 1.0,
+       "Random descent probability")
+OPTION(ls_rwprob, double, 0.309754852086, 0.0, 1.0,
+       "Random walk probability")
+OPTION(ls_hd_count_small, int, 20, 1, 10000,
+       "HD sample count for at most 2000 variables")
+OPTION(ls_hd_count_large, int, 88, 1, 10000,
+       "HD sample count for more than 2000 variables")
+OPTION(ls_swap_bms_cap, int, 2, 1, 10000,
+       "Maximum BMS samples for swap selection")
+OPTION(ls_joint_swap, int, 1, 0, 1,
+       "Select swaps by exact joint gain (mode 0)")
+OPTION(ls_noble_count, int, 1, 0, 1,
+       "Use XOR-based score updates for distinct-variable CNF rows (mode 0)")
+OPTION(ls_joint_swap_samples, int, 4, 1, 64,
+       "Maximum joint-swap candidates per literal truth value")
+OPTION(ls_joint_swap_work_budget, int, 2048, 1, 2e9,
+       "Occurrence-visit budget per joint-swap selection")
+OPTION(ls_neighbor_budget_gib, int, 37, 1, 48,
+       "Neighbor-entry memory budget (GiB)")
+OPTION(verbose, int, 0, 0, 1,
+       "Verbose mode")

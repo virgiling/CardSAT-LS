@@ -1,0 +1,13 @@
+[project]
+name = "cardsat-ls"
+version = "1.0.0"
+description = "CardSAT-LS experiment conversion and plotting utilities"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "matplotlib>=3.10.7",
+    "numpy>=2.2.6",
+    "pandas>=2.3.3",
+    "python-sat>=1.8.dev24",
+    "tqdm>=4.67.1",
+]
