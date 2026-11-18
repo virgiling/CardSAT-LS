@@ -4,6 +4,48 @@
 
 using namespace LocalSearch;
 
+namespace {
+int find_weight_donor(const CardSATLS &s, int receiver) {
+  int best_donor = -1;
+  const int length = s.clause_lit_count[receiver];
+  // Reserve a literal scan and at most one score write per literal.
+  int64_t remaining = s.weight_work_budget - 2LL * length;
+  int64_t donor_cost = 0;
+  int best_weight = 1;
+  int at = length ? s.step % length : 0;
+  for (int n = 0; n < length; ++n) {
+    if (--remaining < donor_cost)
+      break;
+    const lit &target = s.clause_lit[receiver][at];
+    if (++at == length)
+      at = 0;
+    const int var = target.var_num;
+    if (s.cur_soln[var] == target.sense)
+      continue;
+    const int count = s.var_lit_count[var];
+    int pos = s.step % count;
+    for (int j = 0; j < count; ++j) {
+      if (--remaining < donor_cost)
+        return best_donor;
+      const lit &other = s.var_lit[var][pos];
+      if (++pos == count)
+        pos = 0;
+      const int donor = other.clause_num;
+      if (other.sense != target.sense || s.unit_weight[donor] <= best_weight ||
+          s.sat_count[donor] < s.clause_true_lit_thres[donor])
+        continue;
+      const int64_t cost = 2LL * s.clause_lit_count[donor];
+      if (cost > remaining)
+        continue;
+      best_donor = donor;
+      donor_cost = cost;
+      best_weight = s.unit_weight[donor];
+    }
+  }
+  return best_donor;
+}
+} // namespace
+
 void CardSATLS::increase_weights() {
   int touched_vars_count = 0;
   for (int i = 0; i < unsat_count; ++i) {
@@ -44,6 +86,38 @@ void CardSATLS::apply_weight_score_deltas(int touched_count) {
   }
 }
 
+void CardSATLS::accumulate_weight_delta(int c, int delta, int &touched_count) {
+  unit_weight[c] += delta;
+  for (int j = 0; j < clause_lit_count[c]; ++j) {
+    const lit &occurrence = clause_lit[c][j];
+    const int v = occurrence.var_num;
+    const bool lit_true = cur_soln[v] == occurrence.sense;
+    const int change = clause_score_contribution(
+        lit_true, sat_count[c], clause_true_lit_thres[c], delta);
+    if (!change)
+      continue;
+    if (!weight_is_touched[v]) {
+      weight_is_touched[v] = true;
+      weight_touched_vars[touched_count++] = v;
+    }
+    weight_delta_score[v] += change;
+  }
+}
+
+bool CardSATLS::try_transfer_weights() {
+  assert(unsat_count > 0);
+  const int receiver = hardunsat_stack[step % unsat_count];
+  const int donor = find_weight_donor(*this, receiver);
+  if (donor < 0)
+    return false;
+
+  int touched_count = 0;
+  accumulate_weight_delta(receiver, 1, touched_count);
+  accumulate_weight_delta(donor, -1, touched_count);
+  apply_weight_score_deltas(touched_count);
+  return true;
+}
+
 void CardSATLS::apply_weight_score_delta(int v, int delta) {
   score[v] += delta;
   if (delta > 0 && score[v] > 0 && already_in_goodvar_stack[v] == -1)
@@ -75,4 +149,11 @@ void CardSATLS::smooth_weights() {
   }
 }
 
-void CardSATLS::update_clause_weights() { increase_weights(); }
+void CardSATLS::update_clause_weights() {
+  if (enable_weight_transfer && ++weight_update_tick == weight_update_period) {
+    weight_update_tick = 0;
+    if (try_transfer_weights())
+      return;
+  }
+  increase_weights();
+}

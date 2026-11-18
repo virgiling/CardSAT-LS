@@ -147,8 +147,14 @@ void Options::parse_args(int argc, char *argv[]) {
     std::fputs("Joint swap requires --mode 0\n", stderr);
     std::exit(1);
   }
+  if (mode && ls_weight_transfer &&
+      find_option(table, "ls_weight_transfer")->supplied) {
+    std::fputs("Local weight transfer requires --mode 0\n", stderr);
+    std::exit(1);
+  }
   if (mode) {
     ls_joint_swap = 0;
+    ls_weight_transfer = 0;
   }
 }
 

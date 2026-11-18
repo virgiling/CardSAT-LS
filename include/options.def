@@ -40,6 +40,12 @@ OPTION(ls_joint_swap_samples, int, 4, 1, 64,
        "Maximum joint-swap candidates per literal truth value")
 OPTION(ls_joint_swap_work_budget, int, 2048, 1, 2e9,
        "Occurrence-visit budget per joint-swap selection")
+OPTION(ls_weight_transfer, int, 1, 0, 1,
+       "Enable periodic local weight transfer (mode 0)")
+OPTION(ls_weight_update_period, int, 4, 1, 1000000,
+       "Weight-update calls between transfer attempts")
+OPTION(ls_weight_work_budget, int, 2048, 1, 2e9,
+       "Visit budget per local weight transfer")
 OPTION(ls_neighbor_budget_gib, int, 37, 1, 48,
        "Neighbor-entry memory budget (GiB)")
 OPTION(verbose, int, 0, 0, 1,

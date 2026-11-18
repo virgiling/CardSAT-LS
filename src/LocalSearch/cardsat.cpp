@@ -66,6 +66,10 @@ void CardSATLS::settings() {
 
   delta_total_weight = 0;
   ave_weight = 1;
+  enable_weight_transfer =
+      solver_options.mode == 0 && solver_options.ls_weight_transfer;
+  weight_update_period = solver_options.ls_weight_update_period;
+  weight_work_budget = solver_options.ls_weight_work_budget;
   p_scale = 0.3;
   const float ratio = float(num_clauses) / num_vars;
   const bool use_offset = q_init ? q_scale < 0.5f : !(ratio <= 15);
@@ -96,6 +100,7 @@ void CardSATLS::settings() {
 }
 
 void CardSATLS::init_local_search() {
+  weight_update_tick = 0;
   unsat_count = 0;
   satisfied_cardinality_count = 0;
   std::fill_n(score + 1, num_vars, 0);

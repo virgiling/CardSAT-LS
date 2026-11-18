@@ -64,6 +64,9 @@ public:
   int *weight_delta_score;
   int *weight_touched_vars;
   bool *weight_is_touched;
+  bool enable_weight_transfer = false;
+  int weight_update_period = 4;
+  int weight_work_budget = 2048;
   int delta_total_weight;
   int ave_weight;
   float p_scale;
@@ -182,7 +185,10 @@ private:
   }
 
   int select_var_after_update_weight();
+  int weight_update_tick = 0;
   bool try_joint_swap();
+  bool try_transfer_weights();
+  void accumulate_weight_delta(int clause, int delta, int &touched_count);
   void apply_weight_score_deltas(int touched_count);
   void apply_weight_score_delta(int v, int delta);
 };
